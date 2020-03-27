@@ -18,6 +18,4 @@ soup = BeautifulSoup(html, "lxml")
 for tag in soup.find('div', {"class" : "maincounter-number"}):
     print(tag)
 
-
-
 driver.close()
