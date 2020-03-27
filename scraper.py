@@ -19,4 +19,5 @@ for tag in soup.find('div', {"class" : "maincounter-number"}):
     print(tag.text)
 
 
+
 driver.close()
