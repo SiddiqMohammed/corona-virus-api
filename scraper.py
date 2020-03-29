@@ -4,15 +4,16 @@ import time
 from firebase import firebase
 import json
 
-
+#Reading the JSON file
 with open('E:\Project_Files\outer_city\python_stuff\worldo-meter-scraper\serviceAccountKey.json') as f:
   data = json.load(f)
   
 url = data["url"]
 Database_link = data["Database_link"]
 put_link = data["put_link"]
+x = ''
 
-
+#Starting Selenium
 profile = webdriver.FirefoxProfile()
 profile.set_preference("media.volume_scale", "0.0")
 driver = webdriver.Firefox(firefox_profile=profile)
@@ -20,8 +21,7 @@ driver.set_window_position(1500, -110)
 driver.get(url)
 firebase = firebase.FirebaseApplication(Database_link, None)
 
-x = ''
-
+#Updating Firebase Database
 def updates():
     time.sleep(1)
 
@@ -38,16 +38,18 @@ def updates():
         result = firebase.put(put_link, "'{}'".format(text_list[i]), listed[i])
         i += 1
 
-
+#Main Function Starts Seperate Which Will Be Useful If Adding Functions In The Future
 def Start():
     updates()
 
+#Running The Code Forever
 # while True:
 #     Start()
 
-for i in range(2):       #for 24hrs range = 48
+#Running The Code For A Specific Number Of times Or Specific Amount Of Time
+for i in range(2):       #Number Of Times
     print("update")
-    time.sleep(10)    #60s*30 = 30mins = 1800
+    time.sleep(10)    #Time In Seconds 
     Start()
 
 driver.close()
