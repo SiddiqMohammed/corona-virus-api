@@ -2,16 +2,23 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
 from firebase import firebase
+import json
 
 
-url = 'https://www.worldometers.info/coronavirus/'
+with open('E:\Project_Files\outer_city\python_stuff\worldo-meter-scraper\serviceAccountKey.json') as f:
+  data = json.load(f)
+  
+url = data["url"]
+Database_link = data["Database_link"]
+put_link = data["put_link"]
+
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("media.volume_scale", "0.0")
 driver = webdriver.Firefox(firefox_profile=profile)
 driver.set_window_position(1500, -110)
 driver.get(url)
-firebase = firebase.FirebaseApplication("https://pythondb-bfd79.firebaseio.com/", None)
+firebase = firebase.FirebaseApplication(Database_link, None)
 
 x = ''
 
@@ -24,40 +31,25 @@ def updates():
     listed = []
     text_list = ['Total_Cases', 'Deaths', 'Recovered']
     i = 0
-
-    # for meta in soup.find_all('div', {'class': 'maincounter-number'}):
-    #     institution = meta.find_all()[2].text.strip()
-    #     print(institution)  # or whatever you like to store it
    
     for my_tag in soup.find_all(class_="maincounter-number"):
         listed.append(my_tag.text.strip())
-    # print(listed[1])
     while i < len(text_list):
-        result = firebase.put('/pythondb-bfd79/customer/-M3TXyKe-R9-Vkk4MsEI', "'{}'".format(text_list[i]), listed[i])
-        # E = "'{}'".format(text_list[i])
-        # print(listed)
+        result = firebase.put(put_link, "'{}'".format(text_list[i]), listed[i])
         i += 1
-
-    # for tag in soup.find_all('div', {"class" : "maincounter-number"}):
-    #     # print(tag)
-    #     for child in tag.string:
-    #         print(child)
-        # for child in tag.string:
-        #     global x
-        #     x = x + child.rstrip()
-        # if x != "":
-        #     result = firebase.put('/pythondb-bfd79/customer/-M3TXyKe-R9-Vkk4MsEI', 'Recovered', x)
-        #     print(result)
 
 
 def Start():
     updates()
 
-Start()
-
-# for i in range(48):       #for 24hrs range = 48
+# while True:
 #     Start()
-#     time.sleep(1800)    #60s*30 = 30mins = 1800
+
+for i in range(2):       #for 24hrs range = 48
+    print("update")
+    time.sleep(10)    #60s*30 = 30mins = 1800
+    Start()
+
 driver.close()
 
 
