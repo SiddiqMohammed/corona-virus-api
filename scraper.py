@@ -63,17 +63,17 @@ def Start():
 
 
 #Running The Code Forever
-# while True:
-#     Start()     
-#     print("updated")
-#     time.sleep(1800)  #1800s = 30mins
-#     driver.refresh()
+while True:
+    Start()     
+    print("updated")
+    time.sleep(1800)  #1800s = 30mins
+    driver.refresh()
 
 #Running The Code For A Specific Number Of times Or Specific Amount Of Time
-for i in range(1):       #Number Of Times
-    time.sleep(1)    #Time In Seconds 
-    Start()
-    print("update")
+# for i in range(1):       #Number Of Times
+#     time.sleep(1)    #Time In Seconds 
+#     Start()
+#     print("update")
 
 
 driver.close()
