@@ -1,8 +1,17 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
-from firebase import firebase
+# from firebase import firebase
 import json
+	
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+# initializations 
+cred = credentials.Certificate('firebase-sdk.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 #Reading the JSON file
 with open('E:\Project_Files\outer_city\python_stuff\worldo-meter-scraper\serviceAccountKey.json') as f:
@@ -19,7 +28,7 @@ profile.set_preference("media.volume_scale", "0.0")
 driver = webdriver.Firefox(firefox_profile=profile)
 driver.set_window_position(1500, -110)
 driver.get(url)
-firebase = firebase.FirebaseApplication(Database_link, None)
+# firebase = firebase.FirebaseApplication(Database_link, None)
 
 #Updating Firebase Database
 def updates():
@@ -51,8 +60,13 @@ def updates():
     i = 0
 
     while i < len(listed1):
-        result = firebase.put(put_link, "'{}'".format(text_list[i]), listed1[i])
+        # result = firebase.put(put_link, "'{}'".format(text_list[i]), listed1[i])
+        #adding first data
+        doc_ref = db.collection('data').document('lgtq2xqlRv40YirvlJ8n')
+        
+        doc_ref.update({text_list[i] : listed1[i]})
         i += 1
+
     
 
 
@@ -66,7 +80,7 @@ def Start():
 while True:
     Start()     
     print("updated")
-    time.sleep(1800)  #1800s = 30mins
+    time.sleep(1)  #1800s = 30mins
     driver.refresh()
 
 #Running The Code For A Specific Number Of times Or Specific Amount Of Time
